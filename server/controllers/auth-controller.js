@@ -1,0 +1,112 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../../server/models/User');
+const registerUser = async(req,res) => {
+    const {userName , email , password} = req.body;
+    try{
+        const checkUser = await User.findOne({email});
+        console.log(checkUser);
+        if(checkUser){
+            return res.json({
+                success:false,
+                message : "User already Exists with the same email !"
+            })
+        }
+        const hashPassword = await bcrypt.hash(password,12);
+        const newUser = new User({
+            userName , email , 
+            password : hashPassword
+        })
+        await newUser.save();
+        res.status(200).json({
+            success : true,
+            message : "Registeration Successful!"
+
+        })
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json({
+            success: false,
+            message : 'Some Error Occured!'
+        })
+    }
+
+}
+const loginUser = async(req,res) => {
+    const {email , password} = req.body;
+    try{
+        const checkUser = await User.findOne({email});
+        if(!checkUser){
+            return res.json({
+                success:false,
+                message : "User Does Not Exist ! Please Register!"
+            })
+        }
+        const checkPassword = await bcrypt.compare(password , checkUser.password);
+        if(!checkPassword){
+            return res.json({
+                success:false,
+                message : "Incorrect Password!"
+            })
+        }
+        const token = jwt.sign({
+            id : checkUser._id , 
+            role : checkUser.role,
+            email : checkUser.email
+        } , 'CLIENT_SECRET_KEY' , {expiresIn : '120m'})
+        res.cookie('token' , token , {httpOnly : true ,secure : false}).json({
+            success : true,
+            message : 'Logged in Successfully',
+            user : {
+                email : checkUser.email,
+                role : checkUser.role,
+                id  : checkUser._id
+            }
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json({
+            success: false,
+            message : 'Some Error Occured!'
+        })
+    }
+
+}
+const logoutUser = async(req,res) => {
+    try{
+        res.clearCookie('token').json({
+            success : true,
+            message : "Logged Out!"
+        })
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json({
+            success: false,
+            message : 'Some Error Occured!'
+        })
+    }
+}
+const authMiddleWare = async(req,res,next) =>{
+    const token  = req.cookies.token;
+    if(!token){
+        return res.status(401).json({
+            success : false,
+            message : "Unauthorized User!"
+        })
+    }
+    try{
+        const decoded = jwt.verify(token ,'CLIENT_SECRET_KEY' );
+        req.user = decoded;
+        next();
+    }
+    catch(error){
+        return res.status(401).json({
+            success : false,
+            message : "Unauthorized User!"
+        })
+    }
+}
+module.exports = {registerUser , loginUser , logoutUser , authMiddleWare}
