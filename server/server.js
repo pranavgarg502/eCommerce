@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const authRouter = require('./routes/auth/auth-routes');
 const adminProductRouter = require('./routes/admin/product-routes')
-const uri = 'your mongoDB Url';
+const uri = '';
 mongoose.connect(uri)
 .then(()=>{
     console.log("MONGODB connected");
