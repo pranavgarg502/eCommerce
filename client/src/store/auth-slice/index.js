@@ -7,6 +7,7 @@ const initialState = {
     isLoading : true,
     user : null
 }
+//this asyncThunk is an action
 export const registerUser = createAsyncThunk('/auth/register' , 
     async(formData)=>{
         const response = await axios.post("http://localhost:5002/api/auth/register" , formData , {
