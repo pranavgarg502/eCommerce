@@ -35,6 +35,15 @@ export const checkAuth = createAsyncThunk('/auth/check-auth' ,
         return response.data;
     }
 )
+export const logoutUser = createAsyncThunk('/auth/logout' , 
+    async()=>{
+        const response = await axios.post("http://localhost:5002/api/auth/logout" ,{},  {
+            withCredentials : true
+        }) 
+        return response.data;
+    }
+)
+
 const authSlice = createSlice({
     name : 'auth',
     initialState,
@@ -61,11 +70,13 @@ const authSlice = createSlice({
         .addCase(loginUser.pending , (state)=>{
             state.isLoading = true;
         })
-        .addCase(loginUser.fulfilled , (state,action) => {
-            state.isLoading = false;
-            state.user = action.payload.success ?  action.payload.user : null;
-            state.isAuthenticated = action.payload.success ;
+        .addCase(loginUser.fulfilled , (state, action) => {
+        console.log("LOGIN RESPONSE:", action.payload); 
+        state.isLoading = false;
+        state.user = action.payload.success ? action.payload.user : null;
+        state.isAuthenticated = action.payload.success;
         })
+
         .addCase(loginUser.rejected , (state,action) => {
             state.isLoading = false;
             state.user = null;
@@ -80,6 +91,19 @@ const authSlice = createSlice({
             state.isAuthenticated = action.payload.success ;
         })
         .addCase(checkAuth.rejected , (state,action) => {
+            state.isLoading = false;
+            state.user = null;
+            state.isAuthenticated = false;
+        })
+        .addCase(logoutUser.pending , (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(logoutUser.fulfilled , (state,action) => {
+            state.isLoading = false;
+            state.user = null
+            state.isAuthenticated = false ;
+        })
+        .addCase(logoutUser.rejected , (state,action) => {
             state.isLoading = false;
             state.user = null;
             state.isAuthenticated = false;

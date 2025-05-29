@@ -9,7 +9,7 @@ const types = {
     SELECT : 'select',
     TEXTAREA : 'textarea'
 };
-function CommonForm({formControls , formData , setFormData , onSubmit , buttonText}){
+function CommonForm({formControls , formData , setFormData , onSubmit , buttonText ,isBtnDisabled}){
     function renderInputsByComponentType(getControlItem){
         const value = formData[getControlItem.name] || '';
         let element = null;
@@ -90,7 +90,7 @@ function CommonForm({formControls , formData , setFormData , onSubmit , buttonTe
                     )
                 }
             </div>  
-            <Button type = "submit" className = "mt-2 w-full">{buttonText || 'Submit'}</Button>
+            <Button disabled = {isBtnDisabled} type = "submit" className = "mt-2 w-full">{buttonText || 'Submit'}</Button>
         </form>
     );
 }
