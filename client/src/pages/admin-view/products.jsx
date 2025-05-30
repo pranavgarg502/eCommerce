@@ -30,9 +30,11 @@ function AdminProducts(){
     const dispatch = useDispatch();
     function isFormValid() {
         return Object.keys(formData)
-                .map((key) => formData[key] !== "")
-        .every((item) => item);
+            .filter((key) => key !== 'salesPrice') 
+            .map((key) => formData[key] !== "")
+            .every((item) => item);
     }
+
     function handleDelete(getCurrentProductId){
         dispatch(deleteProduct({
             id : getCurrentProductId
@@ -82,7 +84,6 @@ function AdminProducts(){
     useEffect(()=>{
         dispatch(fetchAllProduct());
     } , [dispatch])
-    // console.log(productList);
     return (
         <Fragment>
             <div className="mb-5 w-full flex justify-end">

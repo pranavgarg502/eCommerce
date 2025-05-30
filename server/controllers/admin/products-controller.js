@@ -71,7 +71,6 @@ const fetchAllProduct = async(req,res) =>{
 const editProduct = async(req,res) =>{
     try{
         const {id} = req.params;
-        console.log(id);
         const{image, title , description , brand , category , price , salesPrice , totalStock} = req.body;
 
         const product = await Product.findById(id);
@@ -99,7 +98,6 @@ const editProduct = async(req,res) =>{
         }
     }
     catch(e){
-        console.log(req.body + 'AHAA');
         console.log(e);
         res.status(500).json({
             success : false,

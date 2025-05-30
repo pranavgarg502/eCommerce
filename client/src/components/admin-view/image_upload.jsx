@@ -8,7 +8,6 @@ import { Skeleton } from "../ui/skeleton";
 function ProductImageUpload({imageFile , setImageFile,uploadImageUrl , setUploadImageUrl ,setImageLoading , imageLoading , isEditMode}){
     const inputRef = useRef(null);
     function handleImageFileChange(event){
-        console.log(event.target.files);
         const selectedFile = event.target.files?.[0]
         if(selectedFile){
             setImageFile(selectedFile);
@@ -36,7 +35,6 @@ function ProductImageUpload({imageFile , setImageFile,uploadImageUrl , setUpload
         const data = new FormData();
         data.append('my-file' , imageFile);
         const res = await axios.post('http://localhost:5002/api/admin/products/upload-image' , data);
-        console.log(res,'res');
         if(res?.data?.success){
             setUploadImageUrl(res.data.result.url);
             setImageLoading(false);
@@ -48,7 +46,6 @@ function ProductImageUpload({imageFile , setImageFile,uploadImageUrl , setUpload
 
         }
     } , [imageFile])
-    console.log(imageFile);
     return(
         <div className="w-full max-w-md mx-auto mt-4">
             <Label className = "text-lg font-semibold mb-2 block">Upload Image</Label>

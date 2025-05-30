@@ -23,8 +23,8 @@ export const addNewProduct = createAsyncThunk('/products/addNewProduct',
 );
 
 export const fetchAllProduct = createAsyncThunk('/products/fetchAllProduct' , 
-    async(formData)=>{
-        const response = await axios.get("http://localhost:5002/api/admin/products/get" , formData , {
+    async()=>{
+        const response = await axios.get("http://localhost:5002/api/admin/products/get"  , {
 
         }) 
         return response?.data;

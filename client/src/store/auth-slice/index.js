@@ -71,7 +71,6 @@ const authSlice = createSlice({
             state.isLoading = true;
         })
         .addCase(loginUser.fulfilled , (state, action) => {
-        console.log("LOGIN RESPONSE:", action.payload); 
         state.isLoading = false;
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success;

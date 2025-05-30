@@ -54,6 +54,7 @@ function MenuItems() {
             className="text-sm font-medium" 
             key={menuItem.id} 
             to={menuItem.path}
+            
           >
             {menuItem.label}
           </Link>
