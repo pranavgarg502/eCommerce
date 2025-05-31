@@ -4,6 +4,8 @@ import ProductFilter from "@/components/user-shop-view/filter";
 import ProductDetailsDialog from "@/components/user-shop-view/product-details";
 import ShoppingProductTile from "@/components/user-shop-view/product-tile";
 import { sortOptions } from "@/config";
+import { toast } from "@/hooks/use-toast";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { fetchAllFilteredProduct, fetchProductDetails } from "@/store/shop/products-slice";
 import { ArrowUpDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -13,11 +15,28 @@ import { useSearchParams } from "react-router-dom";
 function UserShoppingListing(){
     const dispatch = useDispatch();
     const {productList ,productDetails} = useSelector((state) => state.shopProducts)
+    const {user} = useSelector(state => state.auth)
     const [filters , setFilters] = useState({});
     const [sort , setSort] = useState(null);
     const [searchParams , setSearchParams] = useSearchParams();
     const [openDetailsDiaglog , setOpenDetailsDialog] = useState(false);
+    function handleAddtoCart(getCurrentProductId){
+        console.log(getCurrentProductId);
+        dispatch(addToCart({
+            userId : user?.id ,
+            productId : getCurrentProductId,
+            quantity : 1
 
+        })).then((data) =>{
+            if(data?.payload?.success){
+                dispatch(fetchCartItems(user?.id));
+                toast({
+                    title : "Product Added to Cart"
+                })
+            }
+
+        });
+    }
     function handleGetProductDetails(getCurrentProductId){
         dispatch(fetchProductDetails(getCurrentProductId));
     }
@@ -79,7 +98,6 @@ function UserShoppingListing(){
         }
     } ,[productDetails])
 
-
     return (
         <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-4 md:p-6 ">
             <ProductFilter filters = {filters} handleFilter = {handleFilter} />
@@ -91,7 +109,7 @@ function UserShoppingListing(){
                     </h2>
                     <div className="flex items-center gap-3">
                         <span className="text-muted-foreground">
-                            10 Products
+                            {productList.length} Products
                         </span>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -114,11 +132,11 @@ function UserShoppingListing(){
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
                     {
-                        productList && productList.length >0 ? productList.map((product) => <ShoppingProductTile key = {product._id} product={product} handleGetProductDetails={handleGetProductDetails}/>) : null
+                        productList && productList.length >0 ? productList.map((product) => <ShoppingProductTile key = {product._id} product={product} handleAddtoCart = {handleAddtoCart} handleGetProductDetails={handleGetProductDetails}/>) : null
                     }
                 </div>
             </div>
-            <ProductDetailsDialog open = {openDetailsDiaglog} setOpen={setOpenDetailsDialog} productDetails={productDetails}/>
+            <ProductDetailsDialog open = {openDetailsDiaglog} setOpen={setOpenDetailsDialog} handleAddtoCart={handleAddtoCart} productDetails={productDetails}/>
         </div>
 
     )

@@ -11,7 +11,7 @@ import { Badge } from "../ui/badge";
 import { brandOptionsMap, categoryOptionsMap } from "@/config";
 
 
-function ShoppingProductTile({product , handleGetProductDetails}){
+function ShoppingProductTile({product , handleGetProductDetails , handleAddtoCart}){
     return (
             <Card className = "w-full max-w-sm mx-auto">
                 <div onClick={()=>handleGetProductDetails(product?._id)}>
@@ -48,9 +48,7 @@ function ShoppingProductTile({product , handleGetProductDetails}){
 
                 </CardContent>
                 <CardFooter className = "flex items-center justify-between">
-                    <Button onClick = {()=>{
-
-                    }}>Add to Cart</Button>
+                    <Button onClick = {()=>handleAddtoCart(product._id)}>Add to Cart</Button>
                 </CardFooter>
             </Card>
 

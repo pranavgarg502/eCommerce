@@ -29,11 +29,17 @@ function AdminProducts(){
     const [currentEditedID , setCurrentEditedID] = useState(null);
     const dispatch = useDispatch();
     function isFormValid() {
-        return Object.keys(formData)
+        const requiredFieldsFilled = Object.keys(formData)
             .filter((key) => key !== 'salesPrice') 
-            .map((key) => formData[key] !== "")
-            .every((item) => item);
+            .every((key) => formData[key] !== "");
+
+        if (currentEditedID) {
+            return requiredFieldsFilled;
+        }
+
+        return imageFile !== null && requiredFieldsFilled;
     }
+
 
     function handleDelete(getCurrentProductId){
         dispatch(deleteProduct({
