@@ -1,8 +1,10 @@
-function AdminOrders(){
+import AdminOrdersComponent from "@/components/admin-view/orders";
+
+function AdminOrdersPage(){
     return (
         <div>
-            Admin Orders
+            <AdminOrdersComponent/>
         </div>
     )
 }
-export default AdminOrders;
+export default AdminOrdersPage;
