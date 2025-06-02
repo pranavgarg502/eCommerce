@@ -28,7 +28,7 @@ function ShoppingOrderDetailsView(){
                     <p className="font-medium">
                         Order Price
                     </p>
-                    <Label>₹500</Label>
+                    <Label>$500</Label>
                 </div>
                 <Separator/>
                 <div className="grid gap-4">
@@ -42,7 +42,7 @@ function ShoppingOrderDetailsView(){
                                     Product One
                                 </span>
                                 <span>
-                                    ₹500
+                                    $500
                                 </span>
 
                             </li>

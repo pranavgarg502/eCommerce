@@ -46,7 +46,6 @@ function UserShoppingHome() {
     const navigate = useNavigate();
 
     function handleAddtoCart(getCurrentProductId){
-        console.log(getCurrentProductId);
         dispatch(addToCart({
             userId : user?.id ,
             productId : getCurrentProductId,

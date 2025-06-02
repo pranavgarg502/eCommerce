@@ -38,11 +38,11 @@ function ShoppingProductTile({product , handleGetProductDetails , handleAddtoCar
                             product?.salesPrice > 0 ? 'line-through ' : ''
                             }text-lg font-semibold text-primary`}
                         >
-                            ₹{product?.price}
+                            ${product?.price}
                         </span>
 
                         {product?.salesPrice > 0 ? (
-                            <span className="text-lg font-bold">₹{product?.salesPrice} </span>
+                            <span className="text-lg font-bold">${product?.salesPrice} </span>
                         ) : null}
                     </div>
 

@@ -21,7 +21,6 @@ function UserShoppingListing(){
     const [searchParams , setSearchParams] = useSearchParams();
     const [openDetailsDiaglog , setOpenDetailsDialog] = useState(false);
     function handleAddtoCart(getCurrentProductId){
-        console.log(getCurrentProductId);
         dispatch(addToCart({
             userId : user?.id ,
             productId : getCurrentProductId,

@@ -49,7 +49,7 @@ function UserCartItemsContent({cartItem}){
             </div>
             <div className="flex flex-col items-end">
                 <p className="font-semibold">
-                    ₹
+                    $
           {(
             (cartItem?.salesPrice > 0 ? cartItem?.salesPrice : cartItem?.price) *
             cartItem?.quantity
