@@ -1,6 +1,7 @@
 const paypal = require('../../helpers/paypal')
 const Order = require('../../models/Order')
 const Cart = require('../../models/Cart')
+const Product = require('../../models/Product')
 const createOrder= async(req,res)=>{
     try{
         const{userId , cartId , cartItems , addressInfo , orderStatus ,paymentMethod,
@@ -97,6 +98,19 @@ const capturePayment= async(req,res)=>{
         order.orderStatus = 'confirmed';
         order.paymentId = paymentId;
         order.payerId = payerId;
+        const cartItems = order.cartItems;
+        for(let item of cartItems){
+            let product = await Product.findById(item?.productId);
+            console.log(product);
+            if(!product){
+                return res.status(404).json({
+                    success : true,
+                    message : `Not enough stock for product ${product.title}`
+                })
+            }
+            product.totalStock -= item.quantity;
+            await product.save();
+        }
         const getCartId = order.cartId;
         const cart = await Cart.findByIdAndDelete(getCartId);
         await order.save();

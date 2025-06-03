@@ -61,7 +61,6 @@ function UserShoppingCheckout(){
             payerId : '',
         }
         dispatch(createNewOrder(orderData)).then((data)=>{
-            console.log(data);
             if(data?.payload?.success){
                 setIsPaymentStart(true);
             }

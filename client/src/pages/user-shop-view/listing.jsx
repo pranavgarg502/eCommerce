@@ -20,7 +20,27 @@ function UserShoppingListing(){
     const [sort , setSort] = useState(null);
     const [searchParams , setSearchParams] = useSearchParams();
     const [openDetailsDiaglog , setOpenDetailsDialog] = useState(false);
-    function handleAddtoCart(getCurrentProductId){
+    const {cartItems} = useSelector(state=>state.shopCart);
+    const categorySearchParam = searchParams.get('Category');
+    function handleAddtoCart(getCurrentProductId , getTotalStock){
+        let getCartItems = cartItems.items || [];
+
+        if (getCartItems.length) {
+            const indexOfCurrentItem = getCartItems.findIndex(
+                (item) => item.productId === getCurrentProductId
+            );
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                toast({
+                    title: `Only ${getQuantity} quantity can be added for this item`,
+                    variant: "destructive",
+                });
+
+                return;
+                }
+            }
+        }
         dispatch(addToCart({
             userId : user?.id ,
             productId : getCurrentProductId,
@@ -77,7 +97,7 @@ function UserShoppingListing(){
     useEffect(()=>{
         setSort("price-lowtohigh");
         setFilters(JSON.parse(sessionStorage.getItem('filters')) || {})
-    },[])
+    },[searchParams])
     useEffect(()=>{
         if(filters && Object.keys(filters).length > 0 ){
             const createQueryString = createSearchParamsHelper(filters);
@@ -135,7 +155,7 @@ function UserShoppingListing(){
                     }
                 </div>
             </div>
-            <ProductDetailsDialog open = {openDetailsDiaglog} setOpen={setOpenDetailsDialog} handleAddtoCart={handleAddtoCart} productDetails={productDetails}/>
+            <ProductDetailsDialog open = {openDetailsDiaglog} setOpen={setOpenDetailsDialog} productDetails={productDetails}/>
         </div>
 
     )

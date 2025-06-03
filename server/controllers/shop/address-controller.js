@@ -113,7 +113,7 @@ const deleteAddress = async (req, res) => {
       });
     }
 
-    const address = await Address.findOneAndDelete({ _id: addressId, userId });
+    const address = await Address.findOneAndDelete({_id: addressId, userId });
 
     if (!address) {
       return res.status(404).json({

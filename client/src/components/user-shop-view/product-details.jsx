@@ -4,14 +4,51 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { Separator } from "@/components/ui/separator"
 import { Input } from "../ui/input";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setProductDetails } from "@/store/shop/products-slice";
+import { fetchCartItems } from "@/store/shop/cart-slice";
+import { toast } from "@/hooks/use-toast";
 
-function ProductDetailsDialog({open , setOpen , productDetails , handleAddtoCart}){
+function ProductDetailsDialog({open , setOpen , productDetails}){
     const dispatch = useDispatch();
+    const {cartItems} = useSelector(state=>state.shopCart);
     function handleDialogClose(){
         setOpen(false);
         dispatch(setProductDetails());
+    }
+    function handleAddtoCart(getCurrentProductId , getTotalStock){
+        let getCartItems = cartItems.items || [];
+
+        if (getCartItems.length) {
+            const indexOfCurrentItem = getCartItems.findIndex(
+                (item) => item.productId === getCurrentProductId
+            );
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                toast({
+                    title: `Only ${getQuantity} quantity can be added for this item`,
+                    variant: "destructive",
+                });
+
+                return;
+                }
+            }
+        }
+        dispatch(addToCart({
+            userId : user?.id ,
+            productId : getCurrentProductId,
+            quantity : 1
+
+        })).then((data) =>{
+            if(data?.payload?.success){
+                dispatch(fetchCartItems(user?.id));
+                toast({
+                    title : "Product Added to Cart"
+                })
+            }
+
+        });
     }
     return (
         <Dialog open = {open} onOpenChange={handleDialogClose}>
@@ -59,9 +96,18 @@ function ProductDetailsDialog({open , setOpen , productDetails , handleAddtoCart
                     </span>
                 </div>
                 <div className="mt-5 mb-5">
-                    <Button onClick = {()=>handleAddtoCart(productDetails?._id)} className ="w-full">
-                        Add to Cart
+                   {productDetails?.totalStock === 0 ? (
+                    <Button className="w-full opacity-60 cursor-not-allowed">
+                        Out Of Stock
                     </Button>
+                    ) : (
+                    <Button
+                        onClick={() => handleAddtoCart(productDetails?._id , productDetails?.totalStock)}
+                        className="w-full"
+                    >
+                        Add to cart
+                    </Button>
+                    )}
                 </div>
                 <Separator/>
                 <br />

@@ -17,13 +17,22 @@ function ShoppingProductTile({product , handleGetProductDetails , handleAddtoCar
                 <div onClick={()=>handleGetProductDetails(product?._id)}>
                     <div className="relative">
                         <img src={product?.image} alt={product?.title} className="w-full h-[300px] object-cover rounded-t-lg" />
+                       {product?.totalStock === 0 ? (
+                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                        Out Of Stock
+                        </Badge>
+                    ) : product?.totalStock < 10 ? (
+                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                        {`Only ${product?.totalStock} items left`}
+                        </Badge>
+                    ) : product?.salesPrice > 0 ? (
+                        <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                        Sale
+                        </Badge>
+          ) : null}
                     </div>
                 </div>
-                {
-                    product?.salesPrice > 0? <Badge className= "absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-                        Sale
-                    </Badge>: null
-                }
+
                 <CardContent className = "p-4">
                     <h2 className="text-md font-bold mb-2">
                         {product?.title}
@@ -47,8 +56,19 @@ function ShoppingProductTile({product , handleGetProductDetails , handleAddtoCar
                     </div>
 
                 </CardContent>
-                <CardFooter className = "flex items-center justify-between">
-                    <Button onClick = {()=>handleAddtoCart(product._id)}>Add to Cart</Button>
+                <CardFooter>
+                    {product?.totalStock === 0 ? (
+                    <Button className="w-full opacity-60 cursor-not-allowed">
+                        Out Of Stock
+                    </Button>
+                    ) : (
+                    <Button
+                        onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
+                        className="w-full"
+                    >
+                        Add to cart
+                    </Button>
+                    )}
                 </CardFooter>
             </Card>
 
