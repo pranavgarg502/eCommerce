@@ -14,7 +14,7 @@ const intitalAddressFormData = {
     city : ''
 
 }
-function Address({setCurrentSelectedAddress}){
+function Address({setCurrentSelectedAddress , selectedId}){
     const [formData, setFormData] = useState(intitalAddressFormData)
     const dispatch = useDispatch();
     const {user} = useSelector(state =>state.auth);
@@ -105,7 +105,7 @@ function isFormValid(formValid) {
         <Card>
             <div className="mb-5 p-4 gap-2 grid grid-cols-1 sm:grid-cols-2">
                 {
-                    addressList && addressList.length > 0? addressList.map(singleAddressItem => <AddressCard setCurrentSelectedAddress = {setCurrentSelectedAddress} handleDeleteAddress = {handleDeleteAddress} handleEditAddress = {handleEditAddress} setFormData = {setFormData} addressInfo={singleAddressItem}/>) : null
+                    addressList && addressList.length > 0? addressList.map(singleAddressItem => <AddressCard selectedId ={selectedId} setCurrentSelectedAddress = {setCurrentSelectedAddress} handleDeleteAddress = {handleDeleteAddress} handleEditAddress = {handleEditAddress} setFormData = {setFormData} addressInfo={singleAddressItem}/>) : null
                 }
                 
             </div>

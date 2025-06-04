@@ -31,6 +31,7 @@ const handleImageUpload = async(req,res) =>{
 //add a new Product
 const addProduct = async(req,res) =>{
     try{
+        console.log("AAYA HU");
         const{image , title , description , brand , category , price , salesPrice , totalStock} = req.body;
         const newProduct = new Product({
             image , title , description , brand , category , price , salesPrice , totalStock

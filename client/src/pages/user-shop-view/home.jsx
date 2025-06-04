@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { addToCart, fetchCartItems } from '@/store/shop/cart-slice';
 import { toast } from '@/hooks/use-toast';
 import ProductDetailsDialog from '@/components/user-shop-view/product-details';
+import { getFeatureImages } from '@/store/common-slice/feature';
   const categoriesWithIcon = [
     { id: 'men', label: 'Men', icon: ShirtIcon },
     { id: 'women', label: 'Women', icon: Venus },
@@ -36,16 +37,33 @@ import ProductDetailsDialog from '@/components/user-shop-view/product-details';
       { id: "h&m", label: "H&M", icon: Footprints },
     ]
 function UserShoppingHome() {
-    const slides = [bannerOne, bannerTwo, bannerThree];
     const {user} = useSelector(state => state.auth)
     const [currentSlide, setCurrentSlide] = useState(0);
     const {productList,productDetails} = useSelector(state => state.shopProducts);
     const [openDetailsDiaglog , setOpenDetailsDialog] = useState(false);
-    const timerRef = useRef(null); 
+    const {cartItems} = useSelector(state=>state.shopCart);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {featureImageList} = useSelector(state=>state.commonFeature);
+    function handleAddtoCart(getCurrentProductId , getTotalStock){
+        let getCartItems = cartItems.items || [];
 
-    function handleAddtoCart(getCurrentProductId){
+        if (getCartItems.length) {
+            const indexOfCurrentItem = getCartItems.findIndex(
+                (item) => item.productId === getCurrentProductId
+            );
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                toast({
+                    title: `Only ${getQuantity} quantity can be added for this item`,
+                    variant: "destructive",
+                });
+
+                return;
+                }
+            }
+        }
         dispatch(addToCart({
             userId : user?.id ,
             productId : getCurrentProductId,
@@ -86,32 +104,34 @@ function UserShoppingHome() {
     },[dispatch])
 
     useEffect(() => {
-        if (timerRef.current) clearInterval(timerRef.current);
 
-        timerRef.current = setInterval(() => {
-        setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-        }, 5000);
+        const timer = setInterval(() => {
+        setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length);
+        },3000);
 
-        return () => clearInterval(timerRef.current);
-    }, []);
+        return () => clearInterval(timer);
+    }, [featureImageList]);
+    useEffect(()=>{
+        dispatch(getFeatureImages());
+    },[dispatch])
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[600px] overflow-hidden">
-        {slides.map((slide, index) => (
+        {featureImageList && featureImageList.length>0  ? featureImageList.map((slide, index) => (
           <img
-            src={slide}
+            src={slide?.image}
             key={index}
             className={`${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
             alt={`Slide ${index + 1}`}
           />
-        ))}
+        )) : null}
 
         <Button
           onClick={() =>
-            setCurrentSlide((prevSlide) => (prevSlide - 1 + slides.length) % slides.length)
+            setCurrentSlide((prevSlide) => (prevSlide - 1 + featureImageList.length) % featureImageList.length)
           }
           variant="outline"
           size="icon"
@@ -122,7 +142,7 @@ function UserShoppingHome() {
 
         <Button
           onClick={() =>
-            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)
+            setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length)
           }
           variant="outline"
           size="icon"
