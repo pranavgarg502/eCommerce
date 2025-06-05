@@ -10,7 +10,7 @@ const initialState = {
 
 export const addToCart = createAsyncThunk('/cart/addToCart' , 
     async({userId,productId,quantity})=>{
-        const response = await axios.post("http://localhost:5002/api/shop/cart/add" , {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/shop/cart/add` , {
             userId ,productId,quantity
         }
         ) 
@@ -21,7 +21,7 @@ export const addToCart = createAsyncThunk('/cart/addToCart' ,
 )
 export const fetchCartItems = createAsyncThunk('/cart/fethCartItem' , 
     async(userId)=>{
-        const response = await axios.get(`http://localhost:5002/api/shop/cart/get/${userId}` , {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/shop/cart/get/${userId}` , {
         }
         ) 
         return response?.data;
@@ -31,7 +31,7 @@ export const fetchCartItems = createAsyncThunk('/cart/fethCartItem' ,
 )
 export const updateCartItem = createAsyncThunk('/cart/updateCartItem' , 
     async({userId,productId,quantity})=>{
-        const response = await axios.put("http://localhost:5002/api/shop/cart/update-cart" , {
+        const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/shop/cart/update-cart` , {
             userId ,productId,quantity
         }
         ) 
@@ -42,7 +42,7 @@ export const updateCartItem = createAsyncThunk('/cart/updateCartItem' ,
 )
 export const deleteCartItem = createAsyncThunk('/cart/deleteCartItem' , 
     async({userId , productId})=>{
-        const response = await axios.delete(`http://localhost:5002/api/shop/cart/delete/${userId}/${productId}` , {
+        const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/shop/cart/delete/${userId}/${productId}` , {
         }
         ) 
         return response?.data;
