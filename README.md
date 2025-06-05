@@ -59,7 +59,7 @@ A full-featured, production-ready **E-commerce Platform** built with the **MERN 
 
 ---
 ## Folder Structure
-
+```
 e-commerce/
 ├── client/
 │   ├── public/
@@ -94,8 +94,7 @@ e-commerce/
 │
 ├── README.md
 ├── .gitignore
-└── LICENSE
-
+```
 ## 🏁 Getting Started
 
 ### 1. Clone the Repository
@@ -103,33 +102,42 @@ e-commerce/
 ```bash
 git clone https://github.com/your-username/ecommerce-platform.git
 cd ecommerce-platform
-
+```
+### 2. Install Dependencies
+```
 # Frontend
 cd client
 npm install
-
+```
+```
 # Backend
 cd ../server
 npm install
+```
+### 3. Setup Environment Variables
 
 Create a .env file in both client/ and server/ folders
+```
 Frontend (.env)
 VITE_API_URL=http://localhost:5000
-
+```
+```
 Backend (.env)
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 PAYPAL_CLIENT_ID=your_paypal_client_id
-
-Run the App
-
-# Start backend
+```
+### 4. Run the App
+```
+# Start Backend
 cd server
-npm run dev
-
-# Start frontend
+node server.js
+```
+```
+# Start Frontend
 cd ../client
 npm run dev
+```
 
 
