@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { logoutUser } from "@/store/auth-slice";
+import { logoutUser, resetToken } from "@/store/auth-slice";
 import { useEffect, useState } from "react";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
@@ -84,7 +84,11 @@ function HeaderRightContent(){
     const [openCartSheet , setOpenCartSheet] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+  function handleLogOut(){
+    dispatch(resetToken());
+    sessionStorage.clear();
+    navigate('/auth/login');
+  }
     useEffect(()=>{
       dispatch(fetchCartItems(user?.id));
     },[dispatch])
@@ -119,7 +123,7 @@ function HeaderRightContent(){
                             Account
                         </DropdownMenuItem>
                         <DropdownMenuSeparator/>
-                        <DropdownMenuItem onClick = {()=>dispatch(logoutUser())}>
+                        <DropdownMenuItem onClick = {()=>handleLogOut()}>
                             <LogOut className="mr-2 h-4 w-4"/>
                             Logout
                         </DropdownMenuItem>
