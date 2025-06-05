@@ -26,7 +26,7 @@ export const loginUser = createAsyncThunk('/auth/login' ,
     }
 )
 export const checkAuth = createAsyncThunk('/auth/check-auth' , 
-    async()=>{
+    async(token)=>{
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/check-auth`  , {
             Authorization : `Bearer ${token}`,
             headers : {

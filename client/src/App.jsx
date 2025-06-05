@@ -31,6 +31,7 @@ function App() {
     const token = JSON.parse(sessionStorage.getItem('token'))
     dispatch(checkAuth(token));
   },[dispatch]);
+  
   if(isLoading){
     return <Skeleton className="w-[100px] h-[20px] rounded-full" />
   }
