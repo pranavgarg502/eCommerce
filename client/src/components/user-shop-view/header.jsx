@@ -12,7 +12,7 @@ import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
 
-function MenuItems() {
+function MenuItems({setOpenSheet}) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -75,7 +75,7 @@ function UserShopHeader() {
             </SheetContent>
         </Sheet>
         <div className="hidden lg:block">
-          <MenuItems setOpenSheet = {setOpenSheet}/>
+          <MenuItems/>
         </div>
         <div className="hidden lg:block">
             <HeaderRightContent/>
