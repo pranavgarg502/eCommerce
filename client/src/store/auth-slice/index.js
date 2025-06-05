@@ -28,8 +28,8 @@ export const loginUser = createAsyncThunk('/auth/login' ,
 export const checkAuth = createAsyncThunk('/auth/check-auth' , 
     async(token)=>{
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/check-auth`  , {
-            Authorization : `Bearer ${token}`,
             headers : {
+                Authorization : `Bearer ${token}`,
                 'Cache-Control' : 'no-store, no-cache ,must-revalidate, proxy-revalidate '
             }
         }) 
